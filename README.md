@@ -1,62 +1,120 @@
-Node.JS Chat
-============
-[![GitHub Stars](https://img.shields.io/github/stars/IgorAntun/node-chat.svg)](https://github.com/IgorAntun/node-chat/stargazers) [![GitHub Issues](https://img.shields.io/github/issues/IgorAntun/node-chat.svg)](https://github.com/IgorAntun/node-chat/issues) [![Current Version](https://img.shields.io/badge/version-1.0.7-green.svg)](https://github.com/IgorAntun/node-chat) [![Live Demo](https://img.shields.io/badge/demo-online-green.svg)](https://igorantun.com/chat) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IgorAntun/node-chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-This is a node.js chat application powered by SockJS and Express that provides the main functions you'd expect from a chat, such as emojis, private messages, an admin system, etc.
-
-![Chat Preview](http://i.imgur.com/lgRe8z4.png)
-
----
-## Buy me a coffee
-
-Whether you use this project, have learned something from it, or just like it, please consider supporting it by buying me a coffee, so I can dedicate more time on open-source projects like this :)
-
-<a href="https://www.buymeacoffee.com/igorantun" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-
----
-
-## Features
-- Material Design
-- Emoji support
-- User @mentioning
-- Private messaging
-- Message deleting (for admins)
-- Ability to kick/ban users (for admins)
-- See other user's IPs (for admins)
-- Other awesome features yet to be implemented
-
-.
-![User Features](http://i.imgur.com/WbF1fi2.png)
-
-.
-![Admin Features](http://i.imgur.com/xQFaadt.png)
+Slack Scheduler
+===============
 
 
-#### There are 3 admin levels:
-- **Helper:** Can delete chat messages
-- **Moderator:** The above plus the ability to kick and ban users
-- **Administrator:** All the above plus send global alerts and promote/demote users
+A node.js based proof-of-concept (POC) built for Slack and intended to mimic the workflows used by the Third Bridge [Scheduler v3 application](https://github.com/Third-bridge/scheduler).
+
+### Screenshots
+
+#### Specialist Commands Preview
+
+![Specialist Commands Preview](readme_files/slack_scheduler_specialist_search_example.png)
+
+#### Project Commands Preview
+
+![Project Commands Preview](readme_files/slack_scheduler_project_search_example.png)
 
 ---
+
+## Includes
+- Express
+- Node SDK Events API
+- Node SDK Web Client
+- Node SDK Interactive Messages API
+- Use of Slack Block Kit
+
+## User Features
+
+| Command                  | Variables          | Description                                    |
+| :----------------------- | :----------------: | ---------------------------------------------: |
+|  /scheduler-specialist   | [specialist name]  | Get Scheduler details for the given Specialist |
+|  /scheduler-project      | [project code]     | Get Scheduler details for the given Project    |
+|  @Schedulebot            | no parameters      | Introduction to what Schedulebot can do        |
+
+
+## Prerequisites
+- A Slack workspace that you have access to as a development space
+- Ngrok for API between local environment and Slack API
 
 ## Setup
-Clone this repo to your desktop and run `npm install` to install all the dependencies.
 
-You might want to look into `config.json` to make change the port you want to use and set up a SSL certificate.
+### Create a Slack Application &amp; Bot
+
+Navigate to `Create New App` in the Your Apps section at the [Slack Developer Site](https://api.slack.com/)
+
+You will be prompted to enter a Slack Workspace that you have access to as a development space. This workspace represents your dev environment; your bot will be deployed here for testing and experimenting.
+
+![Slack App Display Information Preview](readme_files/slack_scheduler_app_display_info.png)
+
+Next, we need to create a Bot User for our App.
+
+### Create a Bot User
+
+* Go to `App Home`
+* Complete the fields for Bot Name (ScheduleBot) and Default Name
+* Ensure `Always Show My Bot as Online` is enabled
+* Select `OAuth & Permissions` on the side menu.
+
+![Slack App Display Information Preview](readme_files/slack_scheduler_bot_setup.png)
+
+### Set OAuth Permission Scopes
+
+Install your Bot User into the Slack Workspace with correct permission scopes
+  - app_mentions:read
+  - chat:write
+  - commands
+  - users:read
+
+![Slack App Display Information Preview](readme_files/slack_scheduler_oauth_permissions.png)
+
+### Set up Ngrok and Event Subscriptions/Interactions
+
+- [Create a URL with ngrok](https://api.slack.com/tutorials/tunneling-with-ngrok) for Node server to accept external events from Slack API
+  * The ngok server can be started with: `ngrok http 3000`
+  * Take note of the [Ngrok URL] generated - you will need to refer to this later
+- Ensure Event Subscriptions in Slack API are enabled
+  - Go to Event Subscriptions
+  - Turn on Enable Events
+  - Add [Ngrok URL] + /api/slack/events (e.g: http://219907c44632.ngrok.io/api/slack/events)
+
+Inside the Event Subscriptions section, you should now have a verified Request URL. Next, we need to register to which events we want our bot to have access.
+
+- Click Into `Subscribe to bot events`
+- Click `Add Bot User Event`
+- Search and add `app_mention` and `app_home_opened`
+- Save your changes
+
+### Set up Slack Commands
+
+- Create two commands with the following detail:
+
+| Command                  | Usage Hint         | Short Description                              |
+| :----------------------- | :----------------: | ---------------------------------------------: |
+|  /scheduler-specialist   | [specialist name]  | Get Scheduler details for the given Specialist |
+|  /scheduler-project      | [project code]     | Get Scheduler details for the given Project    |
+|  @Schedulebot            | no parameters      | Introduction to what Schedulebot can do        |
+
+The `Request URL` will be the Ngrok URL we created earlier + `/api/specialist` and `/api/project`
+
+![Slack Slash Command Preview](readme_files/slack_scheduler_command.png)
 
 ---
 
-## Usage
-After you clone this repo to your desktop, go to its root directory and run `npm install` to install its dependencies.
+## Troubleshooting
 
-Once the dependencies are installed, you can run  `npm start` to start the application. You will then be able to access it at localhost:3000
+To make sure you own the URL you provide when registering it with Slack, Slack sends a challenge request. To accept the challenge, your server must respond with a specific reply.
 
-To give yourself administrator permissions on the chat, you will have to type `/role [your-name]` in the app console.
+Luckily, instead of building this functionality into our server, we can use a command-line utility built into the @slack/events-api package. To use it, we need our signing secret, which is available in the `Basic Information` section of the developer configuration. We also need the name of our events path.
+
+> $ ./node_modules/.bin/slack-verify --secret <signing_secret> [--path=/api/slack/events] [--port=3000]\
+
+When successfully run, you should see The verification server is now listening at the URL: http://:::3000/slack/events.
+
+This command starts a server that correctly accepts the Slack Events API challenge.
+
+soon as you enter this URL, Slack sends the challenge message. Our running verification server should correctly accept the challenge.
+
+Once this URL is verified, we can stop the ./node_modules/.bin/slack-verify server.
 
 ---
-
-## License
->You can check out the full license [here](https://github.com/IgorAntun/node-chat/blob/master/LICENSE)
-
-This project is licensed under the terms of the **MIT** license.
 
