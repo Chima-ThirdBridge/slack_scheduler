@@ -580,6 +580,14 @@ const specialistScheduleCallJson = {
 					"text": "Select an item",
 					"emoji": true
 				},
+				"initial_option": {
+					"text": {
+						"type": "plain_text",
+						"text": "Required",
+						"emoji": true
+					},
+					"value": "required"
+				},
 				"options": [
 					{
 						"text": {
@@ -587,7 +595,7 @@ const specialistScheduleCallJson = {
 							"text": "Required",
 							"emoji": true
 						},
-						"value": "reuiqred"
+						"value": "required"
 					},
 					{
 						"text": {
@@ -622,6 +630,14 @@ const specialistScheduleCallJson = {
 					"text": "Select an item",
 					"emoji": true
 				},
+				"initial_option": {
+					"text": {
+						"type": "plain_text",
+						"text": "Required",
+						"emoji": true
+					},
+					"value": "required"
+				},				
 				"options": [
 					{
 						"text": {
@@ -629,7 +645,7 @@ const specialistScheduleCallJson = {
 							"text": "Required",
 							"emoji": true
 						},
-						"value": "reuiqred"
+						"value": "required"
 					},
 					{
 						"text": {
@@ -664,6 +680,14 @@ const specialistScheduleCallJson = {
 					"text": "Select an item",
 					"emoji": true
 				},
+				"initial_option": {
+					"text": {
+						"type": "plain_text",
+						"text": "Not invited",
+						"emoji": true
+					},
+					"value": "not_invited"
+				},				
 				"options": [
 					{
 						"text": {
@@ -671,7 +695,7 @@ const specialistScheduleCallJson = {
 							"text": "Required",
 							"emoji": true
 						},
-						"value": "reuiqred"
+						"value": "required"
 					},
 					{
 						"text": {
@@ -706,6 +730,14 @@ const specialistScheduleCallJson = {
 					"text": "Select an item",
 					"emoji": true
 				},
+				"initial_option": {
+					"text": {
+						"type": "plain_text",
+						"text": "Optional",
+						"emoji": true
+					},
+					"value": "optional"
+				},				
 				"options": [
 					{
 						"text": {
@@ -713,7 +745,7 @@ const specialistScheduleCallJson = {
 							"text": "Required",
 							"emoji": true
 						},
-						"value": "reuiqred"
+						"value": "required"
 					},
 					{
 						"text": {
@@ -748,6 +780,14 @@ const specialistScheduleCallJson = {
 					"text": "Select an item",
 					"emoji": true
 				},
+				"initial_option": {
+					"text": {
+						"type": "plain_text",
+						"text": "Required",
+						"emoji": true
+					},
+					"value": "required"
+				},					
 				"options": [
 					{
 						"text": {
@@ -755,7 +795,7 @@ const specialistScheduleCallJson = {
 							"text": "Required",
 							"emoji": true
 						},
-						"value": "reuiqred"
+						"value": "required"
 					},
 					{
 						"text": {
